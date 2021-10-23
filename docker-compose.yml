@@ -1,0 +1,19 @@
+version: '3.7'
+services:
+  django:
+    container_name: django
+    build: ./django/
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./django/:/django/
+    ports:
+      - 8000:8000
+    depends_on:
+      - postgres
+  postgres:
+    container_name: postgres
+    image: postgres:13
+    ports:
+      - 5432:5432
+    environment:
+      - "POSTGRES_HOST_AUTH_METHOD=trust"
