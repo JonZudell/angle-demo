@@ -1,11 +1,12 @@
 version: '3.7'
 services:
-  django:
-    container_name: django
-    build: ./django/
+  backend:
+    container_name: backend
+    build: ./backend/
     command: python manage.py runserver 0.0.0.0:8000
+    entrypoint: /django/entrypoint.sh
     volumes:
-      - ./django/:/django/
+      - ./backend/:/backend/
     ports:
       - 8000:8000
     depends_on:

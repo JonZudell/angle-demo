@@ -13,3 +13,4 @@ RUN pip install --upgrade pip && pip install -r ./requirements.txt
 
 # Copy project
 COPY . /django/
+RUN chmod +x entrypoint.sh
