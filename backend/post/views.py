@@ -26,15 +26,17 @@ class FilterPostList(generics.ListAPIView):
 
     def get_queryset(self):
         """
-        This view should return a list of all the purchases
-        for the currently authenticated user.
+        This view filters by keyword and prices
         """
         queryset = Post.objects.all()
 
         keyword = self.request.query_params.get("keyword")
-        if keyword:
+        if keyword is not None:
             queryset = queryset.filter(name__contains=keyword)
-        min_price = self.request.query_params.get("min_price", float("-inf"))
-        max_price = self.request.query_params.get("max_price", float("inf"))
-        queryset = Post.objects.exclude(price__lt=min_price).exclude(price__gt=max_price)
+        min_price = self.request.query_params.get("min_price")
+        if min_price is not None:
+            queryset = queryset.exclude(price__lt=min_price)
+        max_price = self.request.query_params.get("max_price")
+        if max_price is not None:
+            queryset = queryset.exclude(price__gt=max_price)
         return queryset

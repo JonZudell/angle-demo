@@ -16,10 +16,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path, re_path
 from rest_framework import routers
-from .views import PostList, FilterPostList
-
+#from .views import PostList, FilterPostList
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('post/', PostList.as_view()),
-    re_path('^search/.*$', FilterPostList.as_view())
+    path('post/', include('post.urls'))
 ]
