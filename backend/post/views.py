@@ -33,10 +33,13 @@ class FilterPostList(generics.ListAPIView):
         keyword = self.request.query_params.get("keyword")
         if keyword is not None:
             queryset = queryset.filter(name__contains=keyword)
+
         min_price = self.request.query_params.get("min_price")
         if min_price is not None:
             queryset = queryset.exclude(price__lt=min_price)
+
         max_price = self.request.query_params.get("max_price")
         if max_price is not None:
             queryset = queryset.exclude(price__gt=max_price)
+            
         return queryset

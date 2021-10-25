@@ -1,7 +1,9 @@
 import datetime
 
 from django.db import models
+from django.core.exceptions import ValidationError
 from django.core.validators import MinLengthValidator, MaxLengthValidator, MinValueValidator, RegexValidator 
+from django.db.models.functions import Now
 
 class Post(models.Model):
     name = models.TextField(
@@ -16,7 +18,16 @@ class Post(models.Model):
     # https://stackoverflow.com/questions/49882526/validation-for-datefield-so-it-doesnt-take-future-dates-in-django
     start_date = models.DateField(
         help_text='Product Positing Start Date',
-        validators=[MinValueValidator(limit_value=datetime.date.today)],
+        validators=[MinValueValidator(limit_value=datetime.date.today())],
         verbose_name='start date'
     )
+
+    class Meta:
+        constraints = [
+            models.CheckConstraint(
+                check=models.Q(start_date__gte=Now()),
+                name='start_date_must_be_in_future'
+            )
+        ]
+
     price = models.IntegerField()
