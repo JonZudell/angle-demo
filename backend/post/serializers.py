@@ -3,10 +3,10 @@ from rest_framework import serializers
 from .models import Post
 class PostListSerializer(serializers.ListSerializer):
     def to_representation(self, data):
-        return {"post" : [super().to_representation(data)]}
+        return {"posts" : [super().to_representation(data)]}
 
     def to_internal_value(self, data):
-        return super().to_internal_value(data['post'])
+        return super().to_internal_value(data['posts'])
 
 class PostSerializer(serializers.ModelSerializer):
     # https://stackoverflow.com/questions/48444665/django-rest-framework-datefield-format
