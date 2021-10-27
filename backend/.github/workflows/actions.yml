@@ -1,0 +1,22 @@
+on: [push]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+    env:
+      DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
+      PORT: 8000
+      DJANGO_DEBUG: ${{ secrets.DJANGO_DEBUG }}
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Build the docker-compose stack
+      run: docker-compose up -d
+    - name: Check running containers
+      run: docker ps -a
+    - name: Check logs
+      run: docker logs backend
+    - name: Run test suite
+      run: docker exec backend python manage.py test post
