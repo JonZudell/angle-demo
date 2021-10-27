@@ -9,6 +9,9 @@ def load_posts(name):
 def post_data(client, json):
     return client.post('/post/', json, content_type="application/json")
 
+def get_data(client, params=None)
+    return json.loads(client.get('/post/', params))["posts"]
+
 class PostViewTestCase(TestCase):
     def setUp(self):
         self.all_posts = load_posts('data_01.json')
@@ -35,3 +38,13 @@ class PostViewTestCase(TestCase):
     
     def test_post_sums(self):
         self.assertEqual(len(self.all_posts), len(self.valid_posts) + len(self.invalid_posts))
+
+    def test_post_filter():
+        response = post_data(self.client, json.dumps({"posts" : self.valid_posts}))
+        everything = get_data(self.client)
+        above_1000 = get_data(self.client,{"min_price" : 1000})
+        below_1000 = get_data(self.client,{"max_price" : 1000})
+        self.assertEqual(len(), len(above_1000) + len(below_1000))
+
+        between_500_1000 = get_data(self.client,{"min_price" : 0, "max_price" : 500})
+        between_500_1000 = get_data(self.client,{"min_price" : 500, "max_price" : 1000})
