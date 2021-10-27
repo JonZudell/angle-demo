@@ -9,21 +9,20 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
+import os
 
 from pathlib import Path
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-skxg!k7@qv$_4mr4^e#op2iq0^92q&u&f^bpfsv#ahyl1_3@tu'
+SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY",'django-insecure-skxg!k7@qv$_4mr4^e#op2iq0^92q&u&f^bpfsv#ahyl1_3@tu')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get("DJANGO_DEBUG", True)
 
 ALLOWED_HOSTS = ["0.0.0.0"]
 
@@ -78,10 +77,10 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
-        'HOST': 'postgres',
+        'NAME': os.environ.get("DJANGO_DB",'postgres'),
+        'USER': os.environ.get("DJANGO_DB_USER",'postgres'),
+        'PASSWORD': os.environ.get("DJANGO_DB_PASS",'postgres'),
+        'HOST': os.environ.get("DJANGO_DB_HOST",'postgres'),
         'PORT': 5432
     }
 }
