@@ -18,7 +18,7 @@ class Post(models.Model):
     # https://stackoverflow.com/questions/49882526/validation-for-datefield-so-it-doesnt-take-future-dates-in-django
     start_date = models.DateField(
         help_text='Product Positing Start Date',
-        validators=[MinValueValidator(limit_value=datetime.date.today())],
+        validators=[MinValueValidator(limit_value=datetime.date.today)],
         verbose_name='start date'
     )
 
