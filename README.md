@@ -1,7 +1,14 @@
 # angle-demo
 Angle health demo app.
 
-# Backend Project
+## running
+```bash
+docker-compose up -d # starts postgres and django containers
+docker-compose exec backend python manage.py test post # to evaluate the specification has been met
+```
+or
+https://github.com/JonZudell/angle-demo/actions 
+# Backend Project -- Specification
 
 Let's start an e-commerce company! Some of the basic functionalities of an e-commerce website
 include allowing vendors to post their products, and let users to search for products that they
