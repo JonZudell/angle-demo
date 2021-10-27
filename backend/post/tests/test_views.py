@@ -3,30 +3,35 @@ from django.test import TestCase
 from django.contrib.staticfiles.storage import staticfiles_storage
 import json
 
+def load_posts(name):
+    return json.loads(open(staticfiles_storage.path(name), 'r').read())["posts"]
+
+def post_data(client, json):
+    return client.post('/post/', json, content_type="application/json")
+
 class PostViewTestCase(TestCase):
-    def test_post_data(self):
-        results = []
-        data = json.loads(open(staticfiles_storage.path('data_01.json'), 'r').read())
-        results.extend(data["posts"])
-        data = json.loads(open(staticfiles_storage.path('data_02.json'), 'r').read())
-        results.extend(data["posts"])
-        data = json.loads(open(staticfiles_storage.path('data_03.json'), 'r').read())
-        results.extend(data["posts"])
-        response = self.post_data(json.dumps({"posts" : results}))
+    def setUp(self):
+        self.all_posts = load_posts('data_01.json')
+        self.all_posts.extend(load_posts('data_02.json'))
+        self.all_posts.extend(load_posts('data_03.json'))
+
+        response = post_data(self.client, json.dumps({"posts" : self.all_posts}))
         self.assertEqual(response.status_code, 400)
 
-        errors = json.loads(response.content)["posts"]
-        err_ndx = []
-        # can do in one iteration
-        for ndx, error in enumerate(errors):
-            if error:
-                err_ndx.append(ndx)
+        self.post_errors = json.loads(response.content)["posts"]
+        
+        self.valid_posts = []
+        self.invalid_posts = []
 
-        for ndx in reversed(err_ndx):
-            del results[ndx]
+        for error, post in zip(self.post_errors, self.all_posts):
+            if not error:
+                self.valid_posts.append(post)
+            else:
+                self.invalid_posts.append(post)
 
-        response = self.post_data(json.dumps({"posts" : results}))
+    def test_post_data(self):
+        response = post_data(self.client, json.dumps({"posts" : self.valid_posts}))
         self.assertEqual(response.status_code, 201)
-
-    def post_data(self, json):
-        return self.client.post('/post/', json, content_type="application/json")
+    
+    def test_post_sums(self):
+        self.assertEqual(len(self.all_posts), len(self.valid_posts) + len(self.invalid_posts))
